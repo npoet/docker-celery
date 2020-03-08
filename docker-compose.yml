@@ -1,0 +1,43 @@
+version: '3.7'
+services:
+  api:
+    build: ./app/fast-api-implementation
+    image:
+    command: >
+      bash -c "uvicorn api_endpoints:app"
+    environment: &env
+      - CELERY_BROKER_URL='amqp://localhost:5672'
+      - CELERY_BACKEND='redis://redis:6379'
+      - SQL_DRIVER='ODBC Driver 17 for SQL Server'
+      - DB_SERVER='localhost'
+      - DB_PORT=1433
+      - DB_NAME='testDB'
+      - DB_TABLE='Tasks'
+      - DB_USER='SA'
+      - DB_PASS=''
+    depends_on:
+      - database
+      - broker
+      - backend
+    restart: 'no'
+
+  worker:
+    build: ./app/celery-remote-worker
+    image:
+    command: >
+      bash -c "celery worker --app=remote_worker -l info"
+    environment: *env
+    depends_on:
+      - database
+      - broker
+      - backend
+    restart: 'no'
+
+  broker:
+    image: rabbitmq:latest
+
+  backend:
+    image: redis:latest
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
