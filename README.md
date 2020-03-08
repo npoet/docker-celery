@@ -33,15 +33,24 @@ Start all containers with ```docker-compose up -d```
 This will start the API and remote worker, as well as support containers including MSSQL Database, RabbitMQ broker and 
 Redis backend.
 
+Setup MSSQL Server:
+
+
 #### Calling the REST API:
 
-Use Postman, curl etc. to access the following endpoints:
+Use your method of choice to access the following endpoints:
 
     localhost:8000/                     (Root endpoint, lists available)
     POST localhost:8000/tasks/receive   (Receive new task, add to DB and Celery Queue, execute task)
     GET localhost:8000/tasks/status     (Check task status by task_id)
     GET localhost:8000/tasks/from_db    (Push all DB entries to Celery Queue and execute)
+
+The /tasks/receive endpoint takes a JSON object in the request body of the form:
     
+    {
+        "item_id": int
+        "duration": int
+    }
 
 #### Future Implementation Notes:
 * Address failures in calculation, use try/excepts and calculation timeout/retry limits?
@@ -49,3 +58,4 @@ Use Postman, curl etc. to access the following endpoints:
 * Authentication for API POST methods
 * Better code compartmentalization to fit 12 Factor best practices
 * DB filtering for used item_id's
+* Expand DB for use as message queue backend?

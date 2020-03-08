@@ -1,4 +1,2 @@
 celery
-fastapi
 pyodbc
-uvicorn

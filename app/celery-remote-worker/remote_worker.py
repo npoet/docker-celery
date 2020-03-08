@@ -17,6 +17,5 @@ def calculate(duration):
     :param duration: time in seconds to 'calculate' long-running task
     :return: duration in seconds
     """
-    # 'calculate' for duration seconds
     sleep(duration)
     return duration

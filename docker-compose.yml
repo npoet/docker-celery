@@ -1,8 +1,7 @@
-version: '3.7'
+version: '3'
 services:
   api:
     build: ./app/fast-api-implementation
-    image:
     command: >
       bash -c "uvicorn api_endpoints:app"
     environment: &env
@@ -14,7 +13,7 @@ services:
       - DB_NAME='testDB'
       - DB_TABLE='Tasks'
       - DB_USER='SA'
-      - DB_PASS=''
+      - DB_PASS='changeMe'
     depends_on:
       - database
       - broker
@@ -23,7 +22,6 @@ services:
 
   worker:
     build: ./app/celery-remote-worker
-    image:
     command: >
       bash -c "celery worker --app=remote_worker -l info"
     environment: *env
@@ -33,11 +31,16 @@ services:
       - backend
     restart: 'no'
 
+  database:
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "changeMe"
+      ACCEPT_EULA: "Y"
+
   broker:
     image: rabbitmq:latest
 
   backend:
     image: redis:latest
-
-  database:
-    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
