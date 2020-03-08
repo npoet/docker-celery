@@ -34,7 +34,7 @@ def receive_new_task(item: TaskItem):
 
     task_id = str(int((time.time() * 1000)))  # unique task_id from timestamp
     # Add calculation to queue
-    celery_app.send_task("calculate", task_id=task_id, args=(task_id, item.duration))
+    celery_app.send_task(name="calculate", task_id=task_id, args=[item.duration])
     return task_id
 
 
@@ -49,7 +49,7 @@ def run_tasks_from_db():    # TODO: test, fix db select statement
     tasks = []
     for line in result:
         task_id = int(time.time() * 1000)  # unique task_id from timestamp
-        celery_app.send_task("calculate", (task_id, line[0]))
+        celery_app.send_task(name="calculate", task_id=task_id, args=[line[0]])
         tasks.append(task_id)
     return tasks
 

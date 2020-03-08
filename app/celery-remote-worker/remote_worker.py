@@ -11,13 +11,12 @@ celery_app = Celery(
 
 
 @celery_app.task(name='calculate', track_started=True)
-def calculate(task_id, duration):     # TODO: test
+def calculate(duration):
     """
     "calculate" by waiting 'duration' seconds assoc with task_id
-    :param task_id: item_id from db, int ascending
-    :param duration:
+    :param duration: time in seconds to 'calculate' long-running task
     :return: duration in seconds
     """
     # 'calculate' for duration seconds
     sleep(duration)
-    return task_id, duration
+    return duration
