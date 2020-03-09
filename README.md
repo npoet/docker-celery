@@ -76,3 +76,4 @@ The /tasks/receive endpoint takes a JSON object in the request body of the form:
 * Move default DB setup to Dockerfile?
 * DB filtering for used item_id's
 * Expand DB for use as message queue backend?
+* Better networking: replace static
