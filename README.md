@@ -58,9 +58,9 @@ The database is now ready for use.
 
 Use your method of choice to access the following endpoints:
 
-    GET  localhost:8000/                (Root endpoint, lists available)
-    POST localhost:8000/tasks/receive   (Receive new task, add to DB and Celery Queue, execute task)
-    GET  localhost:8000/tasks/status    (Check task status by task_id)
+    GET  127.0.0.1:8000/                (Root endpoint, lists available)
+    POST 127.0.0.1:8000/tasks/receive   (Receive new task, add to DB and Celery Queue, execute task)
+    GET  127.0.0.1:8000/tasks/status    (Check task status by task_id)
 
 The /tasks/receive endpoint takes a JSON object in the request body of the form:
     
