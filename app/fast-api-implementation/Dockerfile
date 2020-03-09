@@ -1,8 +1,10 @@
-FROM python:3.7
+FROM ubuntu:18.04
 
-# Get the ODBC driver for Microsoft SQL Server
+# Get the ODBC driver for Microsoft SQL Server and dependencies
 RUN apt-get update \
 && apt-get install -y \
+    python3-pip \
+    python3-dev \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -20,8 +22,13 @@ RUN apt-get update \
 && apt-get clean
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 RUN rm requirements.txt
 
-COPY . /
-WORKDIR /app/fast-api-implementation
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY . .
+
+EXPOSE 8000:8000
+
+CMD ["uvicorn", "api_endpoints:API_app"]

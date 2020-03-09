@@ -1,4 +1,4 @@
-celery
+celery[redis]
 fastapi
 pyodbc
 uvicorn

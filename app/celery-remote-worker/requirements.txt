@@ -1,2 +1,2 @@
-celery
+celery[redis]
 pyodbc

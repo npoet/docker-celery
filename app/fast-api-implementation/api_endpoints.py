@@ -14,7 +14,7 @@ def root():
     """
     return {
         "Available Endpoints": [
-            {"GET": ["/tasks/status", "/tasks/from_db"]},
+            {"GET": "/tasks/status"},
             {"POST": "/tasks/receive"},
         ]
     }
@@ -36,22 +36,6 @@ def receive_new_task(item: TaskItem):
     # Add calculation to queue
     celery_app.send_task(name="calculate", task_id=task_id, args=[item.duration])
     return task_id
-
-
-@API_app.get("/tasks/from_db")
-def run_tasks_from_db():    # TODO: test, fix db select statement
-    """
-    Adds all db tasks to queue, useful for testing
-    :return: list of task_id's corresponding to tasks added
-    """
-    db_cursor = db_connect().cursor()
-    result = db_cursor.execute(f"SELECT * FROM {os.environ['DB_TABLE']}")
-    tasks = []
-    for line in result:
-        task_id = int(time.time() * 1000)  # unique task_id from timestamp
-        celery_app.send_task(name="calculate", task_id=task_id, args=[line[0]])
-        tasks.append(task_id)
-    return tasks
 
 
 @API_app.post("/tasks/status")
