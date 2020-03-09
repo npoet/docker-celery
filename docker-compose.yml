@@ -5,6 +5,7 @@ services:
       context: ./app/fast-api-implementation
     env_file:
       - config.env
+    network_mode: "host"
     ports:
       - "8000:8000"
     depends_on:

@@ -8,27 +8,24 @@ RUN apt-get update \
     apt-transport-https \
     ca-certificates \
     curl \
-    gnupg \
-&& curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-&& curl https://packages.microsoft.com/config/debian/9/prod.list  > /etc/apt/sources.list.d/mssql-release.list \
-&& apt-get update \
-&& ACCEPT_EULA=Y apt-get -y install --no-install-recommends \
-    msodbcsql17 \
-    unixodbc \
-    unixodbc-dev \
-    libodbc1 \
-    odbcinst1debian2 \
-    odbcinst \
-&& apt-get clean
+    gnupg
+
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list | tee /etc/apt/sources.list.d/msprod.list
+
+RUN apt-get update
+ENV ACCEPT_EULA=y DEBIAN_FRONTEND=noninteractive
+RUN apt-get install mssql-tools unixodbc-dev -y
 
 COPY requirements.txt ./
 RUN pip3 install --no-cache-dir -r requirements.txt
 RUN rm requirements.txt
 
+RUN odbcinst -j
+RUN cat /etc/odbcinst.ini
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
-
-EXPOSE 8000:8000
 
 CMD ["uvicorn", "api_endpoints:API_app"]

@@ -4,10 +4,13 @@ import os
 
 def db_connect():
     """
-    TODO: connect to docker MSSQL container db
+    Connect to docker MSSQL container db
     :return:
     """
-    conn = pyodbc.connect(f'Driver={os.environ["SQL_DRIVER"]};'
+    drivers = [item for item in pyodbc.drivers()]
+    driver = drivers[-1]
+
+    conn = pyodbc.connect(f'Driver={driver};'
                           f'Server={os.environ["DB_SERVER"]};'
                           f'Port={os.environ["DB_PORT"]};'
                           f'Database={os.environ["DB_NAME"]};'

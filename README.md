@@ -11,7 +11,6 @@ persistent backend.
     |   |   ├── __init__.py   
     |   |   ├── Dockerfile
     |   |   ├── requirements.txt
-    |   |   ├── database.py
     |   |   └── remote_worker.py
     |   └── /fast-api-implementation   
     |       ├── __init__.py
