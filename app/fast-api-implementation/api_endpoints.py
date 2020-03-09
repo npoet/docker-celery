@@ -1,5 +1,3 @@
-from database import db_connect
-import os
 import time
 from celery.result import AsyncResult
 from api_worker import celery_app
@@ -27,11 +25,6 @@ def receive_new_task(item: TaskItem):
     :param item: item_id and duration
     :return: task_id
     """
-    # Add new task to mssql DB
-    db_cursor = db_connect().cursor()
-    db_cursor.execute(f"INSERT INTO {os.environ['DB_TABLE']} "
-                      f"VALUES ({item.item_id}, {item.duration})")
-
     task_id = str(int((time.time() * 1000)))  # unique task_id from timestamp
     # Add calculation to queue
     celery_app.send_task(name="calculate", task_id=task_id, args=[item.duration])
